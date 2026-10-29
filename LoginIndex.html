@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Farm2Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Nunito+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+    />
+    <style>
+      :root {
+        --forest: #163a24;
+        --leaf: #2e7d45;
+        --leaf-dark: #22633a;
+        --sprout: #a9d66b;
+        --marigold: #f4b72f;
+        --paper: #f2f6ec;
+        --ink: #1b2a1f;
+        --muted: #667467;
+        --line: #d5dfcb;
+        --danger: #c0392b;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Nunito Sans", system-ui, sans-serif;
+        color: var(--ink);
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px 16px;
+        background:
+          radial-gradient(circle at 12% 18%, #dcebc4 0, transparent 38%),
+          radial-gradient(circle at 90% 85%, #f9e7b4 0, transparent 34%),
+          var(--paper);
+      }
+      h1 {
+        font-family: "Bricolage Grotesque", "Nunito Sans", sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+
+      /* ---------- Card ---------- */
+      .container {
+        position: relative;
+        width: 880px;
+        max-width: 100%;
+        min-height: 580px;
+        overflow: hidden;
+        border-radius: 28px;
+        background: #fff;
+        box-shadow: 0 30px 60px -25px rgba(22, 58, 36, 0.45);
+      }
+      .form-container {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 50%;
+        background: #fff;
+        transition:
+          transform 0.6s ease-in-out,
+          opacity 0.6s ease-in-out;
+      }
+      .sign-in-container {
+        left: 0;
+        z-index: 2;
+      }
+      .sign-up-container {
+        left: 0;
+        opacity: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .container.right-panel-active .sign-in-container {
+        transform: translateX(100%);
+        opacity: 0; /* fix: sembunyikan form login saat form daftar tampil */
+        pointer-events: none;
+      }
+      .container.right-panel-active .sign-up-container {
+        transform: translateX(100%);
+        opacity: 1;
+        z-index: 5;
+        pointer-events: auto;
+      }
+
+      form {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+        padding: 0 48px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 4px;
+      }
+      .brand-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px 12px 12px 4px;
+        background: var(--leaf);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+      }
+      form h1 {
+        font-size: 30px;
+        color: var(--forest);
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      input {
+        width: 100%;
+        padding: 13px 16px;
+        font: inherit;
+        font-size: 15px;
+        color: var(--ink);
+        background: var(--paper);
+        border: 1.5px solid transparent;
+        border-radius: 12px;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          background 0.2s,
+          box-shadow 0.2s;
+      }
+      input::placeholder {
+        color: #8a978a;
+      }
+      input:focus {
+        background: #fff;
+        border-color: var(--leaf);
+        box-shadow: 0 0 0 4px rgba(46, 125, 69, 0.15);
+      }
+
+      button {
+        font-family: inherit;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        border: none;
+        border-radius: 12px;
+        padding: 13px 28px;
+        transition:
+          transform 0.15s,
+          background 0.2s,
+          box-shadow 0.2s;
+      }
+      form button {
+        margin-top: 6px;
+        color: #fff;
+        background: var(--leaf);
+        box-shadow: 0 8px 18px -8px rgba(46, 125, 69, 0.8);
+      }
+      form button:hover {
+        background: var(--leaf-dark);
+      }
+      button:active {
+        transform: scale(0.97);
+      }
+      button:focus-visible,
+      a:focus-visible {
+        outline: 3px solid var(--marigold);
+        outline-offset: 2px;
+      }
+
+      #error {
+        color: var(--danger);
+        font-size: 14px;
+        min-height: 18px;
+      }
+
+      .social-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      .social-container span {
+        font-size: 13px;
+        color: var(--muted);
+        margin-right: 4px;
+      }
+      .social {
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 1.5px solid var(--line);
+        color: var(--forest);
+        text-decoration: none;
+        font-size: 15px;
+        transition:
+          background 0.2s,
+          color 0.2s,
+          border-color 0.2s;
+      }
+      .social:hover {
+        background: var(--forest);
+        color: #fff;
+        border-color: var(--forest);
+      }
+
+      .switch-mobile {
+        display: none;
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+      .switch-mobile button {
+        background: none;
+        box-shadow: none;
+        color: var(--leaf-dark);
+        padding: 0;
+        margin: 0;
+        text-decoration: underline;
+      }
+      form .switch-mobile button:hover {
+        background: none;
+      }
+
+      /* ---------- Overlay ---------- */
+      .overlay-container {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 50%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 100;
+        transition: transform 0.6s ease-in-out;
+      }
+      .container.right-panel-active .overlay-container {
+        transform: translateX(-100%);
+      }
+
+      .overlay {
+        position: relative;
+        left: -100%;
+        height: 100%;
+        width: 200%;
+        color: #fff;
+        background: var(--forest);
+        overflow: hidden;
+        transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
+      }
+      .overlay::before {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: var(--marigold);
+        top: -70px;
+        right: 28%;
+        opacity: 0.95;
+      }
+      .overlay::after {
+        content: "";
+        position: absolute;
+        left: -10%;
+        right: -10%;
+        bottom: -120px;
+        height: 300px;
+        border-radius: 50% 50% 0 0;
+        background: var(--leaf);
+        box-shadow: 0 -60px 0 -20px #3b9455;
+      }
+      .container.right-panel-active .overlay {
+        transform: translateX(50%);
+      }
+
+      .overlay-panel {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 50%;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+        padding: 0 44px;
+        transition: transform 0.6s ease-in-out;
+      }
+      .overlay-left {
+        transform: translateX(-20%);
+      }
+      .container.right-panel-active .overlay-left {
+        transform: translateX(0);
+      }
+      .overlay-right {
+        right: 0;
+        transform: translateX(0);
+      }
+      .container.right-panel-active .overlay-right {
+        transform: translateX(20%);
+      }
+
+      .overlay-panel h1 {
+        font-size: 34px;
+      }
+      .overlay-panel p {
+        font-size: 15px;
+        line-height: 1.55;
+        color: #e4efd8;
+      }
+      .overlay-panel .ask {
+        color: var(--marigold);
+        font-weight: 700;
+        margin-top: 8px;
+      }
+      .overlay-panel button.press {
+        background: var(--marigold);
+        color: var(--forest);
+        box-shadow: 0 8px 18px -8px rgba(0, 0, 0, 0.5);
+      }
+      .overlay-panel button.press:hover {
+        background: #ffc94d;
+      }
+
+      /* ---------- Mobile ---------- */
+      @media (max-width: 720px) {
+        .container {
+          min-height: 640px;
+          border-radius: 22px;
+        }
+        .overlay-container {
+          display: none;
+        }
+        .form-container {
+          width: 100%;
+        }
+        .container.right-panel-active .sign-in-container {
+          transform: none;
+          opacity: 0;
+        }
+        .container.right-panel-active .sign-up-container {
+          transform: none;
+        }
+        form {
+          padding: 0 28px;
+        }
+        .switch-mobile {
+          display: block;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="container">
+      <!-- Sign up -->
+      <div class="form-container sign-up-container">
+        <form
+          action="php/userRegistration.php"
+          method="POST"
+          class="login-email"
+        >
+          <div class="brand">
+            <div class="brand-mark"><i class="fas fa-leaf"></i></div>
+          </div>
+          <h1 id="vit">Buat akun</h1>
+          <p class="hint">Hanya perlu sebentar. Hasil tani segar menanti Anda.</p>
+          <input
+            type="text"
+            placeholder="Nama"
+            id="name"
+            name="rname"
+            autocomplete="name"
+            required
+          />
+          <input
+            type="email"
+            placeholder="Alamat email"
+            id="mail"
+            name="rmail"
+            autocomplete="email"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Kata sandi"
+            id="pass"
+            name="rpass"
+            autocomplete="new-password"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Ulangi kata sandi"
+            id="cpass"
+            name="rcpass"
+            autocomplete="new-password"
+            required
+          />
+          <button name="rsubmit">Daftar</button>
+          <p class="switch-mobile">
+            Sudah punya akun?
+            <button type="button" id="signInMobile">Masuk</button>
+          </p>
+
+          <div class="social-container">
+            <span>Ikuti kami</span>
+            <a
+              href="https://www.facebook.com"
+              class="social"
+              aria-label="Facebook"
+              target="_blank"
+              rel="noopener"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a
+              href="https://www.instagram.com"
+              class="social"
+              aria-label="Instagram"
+              target="_blank"
+              rel="noopener"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a
+              href="https://www.gmail.com"
+              class="social"
+              aria-label="Email"
+              target="_blank"
+              rel="noopener"
+              ><i class="fas fa-envelope"></i
+            ></a>
+            <a
+              href="https://www.twitter.com"
+              class="social"
+              aria-label="Twitter"
+              target="_blank"
+              rel="noopener"
+              ><i class="fab fa-twitter"></i
+            ></a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Sign in -->
+      <div class="form-container sign-in-container">
+        <form action="php/loginLogic.php" id="login_form" method="POST">
+          <div class="brand">
+            <div class="brand-mark"><i class="fas fa-leaf"></i></div>
+          </div>
+
+          <p class="hint">Masuk untuk memesan hasil tani segar.</p>
+          <input
+            type="email"
+            placeholder="Alamat email"
+            id="username"
+            name="email"
+            autocomplete="email"
+          />
+          <input
+            type="password"
+            placeholder="Kata sandi"
+            id="password"
+            name="password"
+            autocomplete="current-password"
+          />
+          <button type="submit" name="submit">Masuk</button>
+          <p id="error" role="alert"></p>
+          <p class="switch-mobile">
+            Belum punya akun?
+            <button type="button" id="signUpMobile">Daftar</button>
+          </p>
+
+          <div class="social-container">
+            <span>Ikuti kami</span>
+            <a
+              href="https://www.facebook.com"
+              class="social"
+              aria-label="Facebook"
+              target="_blank"
+              rel="noopener"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a
+              href="https://www.instagram.com"
+              class="social"
+              aria-label="Instagram"
+              target="_blank"
+              rel="noopener"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a
+              href="https://www.gmail.com"
+              class="social"
+              aria-label="Email"
+              target="_blank"
+              rel="noopener"
+              ><i class="fas fa-envelope"></i
+            ></a>
+            <a
+              href="https://www.twitter.com"
+              class="social"
+              aria-label="Twitter"
+              target="_blank"
+              rel="noopener"
+              ><i class="fab fa-twitter"></i
+            ></a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Overlay -->
+      <div class="overlay-container">
+        <div class="overlay">
+          <div class="overlay-panel overlay-left">
+            <h1>Selamat datang</h1>
+            <p>Mulailah perjalanan hidup sehat Anda dari sini.</p>
+            <p class="ask">Sudah punya akun?</p>
+            <button class="press" id="signIn">Masuk</button>
+          </div>
+          <div class="overlay-panel overlay-right">
+            <h1>TaniMart</h1>
+            <p>
+              Kami berkomitmen menghadirkan hasil pertanian terbaik ke dapur
+              Anda. Makan sehat, hidup bahagia.
+            </p>
+            <p class="ask">Belum punya akun?</p>
+            <button class="press" id="signUp">Daftar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      const container = document.getElementById("container");
+      const showSignUp = () => container.classList.add("right-panel-active");
+      const showSignIn = () => container.classList.remove("right-panel-active");
+
+      document.getElementById("signUp").addEventListener("click", showSignUp);
+      document.getElementById("signIn").addEventListener("click", showSignIn);
+      document
+        .getElementById("signUpMobile")
+        .addEventListener("click", showSignUp);
+      document
+        .getElementById("signInMobile")
+        .addEventListener("click", showSignIn);
+    </script>
+  </body>
+</html>
